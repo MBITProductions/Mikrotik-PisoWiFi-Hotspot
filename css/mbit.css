@@ -1,0 +1,123 @@
+/* MBIT LOADING */
+#mbit_loading {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #808080b0;
+  z-index: 10000;
+  display: table;
+}
+.vertical-center-row {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+/* Button Seperator */
+.btn-seperator-sm {
+  padding-bottom: 15px;
+}
+@media (min-width: 768px) {
+  .btn-seperator-sm {
+    padding-bottom: 0px;
+  }
+}
+
+/* This is custom from FREEHTML5.co */
+.fh5co-section-title .fh5co-title,
+.fh5co-page-title .mbit-brand {
+  font-family: "Unica One", sans-serif;
+  text-transform: none;
+  border-bottom: 2px solid #2e2e2e;
+  font-size: 30px;
+  line-height: 40px;
+  display: inline-block;
+}
+.fh5co-section-title .fh5co-title,
+.fh5co-page-title span.mbit-brand-sub {
+  text-transform: uppercase;
+}
+
+/* SHINY BUTTON ANIMATION */
+.mbit-shiny-btn {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.mbit-shiny-btn:before {
+  position: absolute;
+  content: "";
+  display: inline-block;
+  top: -180px;
+  left: 0;
+  width: 30px;
+  height: 100%;
+  background-color: #fff;
+  animation: shiny-frame-btn 3s ease-in-out infinite;
+}
+.mbit-shiny-btn:active {
+  box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, 0.3),
+    -4px -4px 6px 0 rgba(116, 125, 136, 0.2),
+    inset -4px -4px 6px 0 rgba(255, 255, 255, 0.2),
+    inset 4px 4px 6px 0 rgba(0, 0, 0, 0.2);
+}
+@keyframes shiny-frame-btn {
+  0% {
+    -webkit-transform: scale(0) rotate(45deg);
+    opacity: 0;
+  }
+  80% {
+    -webkit-transform: scale(0) rotate(45deg);
+    opacity: 0.5;
+  }
+  81% {
+    -webkit-transform: scale(4) rotate(45deg);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(50) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+/* BLINK TEXT */
+.blink_text {
+  animation: blinker 1.2s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* OTHERS */
+.insertCoinGenerate div h3 {
+  text-align: center;
+}
+
+.mbit-home-link,
+mbit-help-text {
+  /* The styling is from fh5co */
+  display: block;
+  text-align: left;
+  font-weight: 300 !important;
+  color: #7b7b7b;
+
+  animation: blinker 3.5s linear infinite;
+}
+
+#mbit_secret {
+  display: float;
+  float: right;
+  margin-top: 5px;
+}
+
+#mbit_modal_tips, p.mbit_modal_unused, #insertCoinAdded {
+  display:none;
+}
+
+div.mbit_modal_unused {
+  display:none;
+  animation: blinker 3.5s linear infinite;
+}

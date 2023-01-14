@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="MBit I.T. Solutions Piso WiFi Vendo">
+    <meta name="author" content="Dennis James Matildo">
+    <title>Logout | Piso WiFi Vendo - MBit IT Solutions</title>
+
+    <!-- Google Webfont -->
+    <link rel='stylesheet' href='css/googlefont-UnicaOne.css'>
+    <!-- Icomoon Icons -->
+    <link rel="stylesheet" href="css/icomoon-icons.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <!-- Theme Style -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- PLACE YOUR STYLES HERE ~ MBIT TEAM -->
+    <link rel="stylesheet" href="css/mbit.css">
+
+    <script type="text/javascript">
+        function openLogin() {
+            if (window.name != 'hotspot_logout') return true;
+
+            open('$(link-login)', '_blank', '');
+            window.close();
+
+            $("#mbit_loading").hide();
+
+            return false;
+        }
+    </script>
+</head>
+
+<body role="document">
+    <!-- Mikrotik Hotspot Variables (hidden) -->
+    <input type="hidden" id="mk_home_ip" name="error" value="$(hostname)">
+    <!-- Mikrotik Hotspot Variables (hidden) -->
+
+    <!-- Loading -->
+    <div id="mbit_loading">
+        <div class="row vertical-center-row">
+            <table width="100%" height="100%">
+                <tr>
+                    <td align="center" valign="middle">
+                        <img src="images/Spinner-0.7s-197px.svg" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- Loading -->
+
+    <!-- Header -->
+    <header id="fh5co-header" role="banner" style="margin-top: 3em; margin-bottom: 0em;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="fh5co-page-title text-center">
+                        <h1 class="fh5co-title mbit-brand">
+                            <span id="mbit_brand"></span>
+                            <span id="mbit_brand_sub" class="mbit-brand-sub"></span>
+                        </h1>
+                        <h2 class="fh5co-title-sub">Piso WiFi Vendo</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Header -->
+
+    <div class="container theme-showcase" role="main">
+        <div class="row"><br></div>
+
+        <!-- <div class="row">
+            $(if login-by == 'trial')
+            <br>
+            <h1>Good bye trial user!</h1><br>
+            $(elif login-by != 'mac')
+            <br>
+            <h1>Good bye $(username)!</h1><br>
+            $(endif)
+        </div> -->
+
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Your connection status</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-responsive table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td><i class="icon-user"></i> Username / Voucher:</td>
+                                    <td>$(username)</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="icon-cloud2"></i> IP Address:</td>
+                                    <td>$(ip)</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="icon-cog"></i> MAC Address:</td>
+                                    <td>$(mac)</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="icon-clock2"></i> Session Time:</td>
+                                    <td>$(uptime)</td>
+                                </tr>
+                                $(if session-time-left)
+                                <tr>
+                                    <td><i class="icon-time-slot"></i> Time Left:</td>
+                                    <td>$(session-time-left)</td>
+                                </tr>
+                                $(endif)
+                                <tr>
+                                    <td><i class="icon-select-arrows"></i> Used Bytes Up / Down:</td>
+                                    <td>$(bytes-in-nice) / $(bytes-out-nice)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <form id="redirect_logout_form" action="$(link-login)" name="login"
+                                    onSubmit="return openLogin()">
+                                    <button type="submit" class="btn btn-primary btn-block mbit-shiny-btn">
+                                        Resume Time
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h5 class="mbit-home-link">You may also visit PisoWiFi Vendo at <a class="btn-link" href="http://10.0.0.1"
+                        target="_blank">http://10.0.0.1</a> to be able to PAUSE & ADD Time.</h5>
+            </div>
+        </div>
+
+    </div>
+    <!-- Container -->
+
+    <!-- Footer -->
+    <footer id="fh5co-footer" class="fh5co-press" role="contentinfo" style="padding:1em;">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <p class="fh5co-copyright"><b>Copyright &copy; 2020-2022 MBit IT Solutions</b><br>
+                        Powered by <a href="https://mikrotik.com/" target="_blank">Mikrotik</a><br>
+                        Designed by <a href="https://freehtml5.co/" target="_blank">FREEHTML5.co</a> and Sounds by <a
+                            href="https://mixkit.co/" target="_blank">Mixkit</a><br>
+                        Hotspot Portal <span id="mbit_version"></span>
+                    </p>
+                </div>
+                <div class="col-sm-6">
+                    <ul class="fh5co-social">
+                        <li><a href="https://www.facebook.com/MBitITSolutions/" target="_blank"><i
+                                    class="icon-facebook"></i></a></li>
+                        <li><a href="https://api.whatsapp.com/send?phone=639761793786&app=facebook&entry_point=page_cta&fbclid=IwAR3pb93iMXu42oKjXaG5v4yAAJEBrtiHZJAa26gs2qfJzwkewoS6H9OfxGI"
+                                target="_blank"><i class="icon-phone"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer -->
+
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- jQuery -->
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="js/bootstrap.js"></script>
+    <!-- PLACE YOUR SCRIPTS HERE ~ MBIT TEAM -->
+    <script src="/js/mbit-config.js"></script>
+    <script src="/js/mbitv1.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- $(if refresh-timeout)
+    <meta http-equiv="refresh" content="$(refresh-timeout-secs)">
+    $(endif) -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="MBit I.T. Solutions Piso WiFi Vendo">
+    <meta name="author" content="Dennis James Matildo">
+    <title>Status | Piso WiFi Vendo - MBit IT Solutions</title>
+
+    <!-- Google Webfont -->
+    <link rel='stylesheet' href='css/googlefont-UnicaOne.css'>
+    <!-- Icomoon Icons -->
+    <link rel="stylesheet" href="css/icomoon-icons.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <!-- Theme Style -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- PLACE YOUR STYLES HERE ~ MBIT TEAM -->
+    <link rel="stylesheet" href="css/mbit.css">
+
+    <script type="text/javascript">
+        $(if advert-pending == 'yes')
+            var popup = '';
+        function focusAdvert() {
+            if (window.focus) popup.focus();
+        }
+        function openAdvert() {
+            popup = open('$(link-advert)', 'hotspot_advert', '');
+            setTimeout("focusAdvert()", 1000);
+        }
+        $(endif)
+        function openLogout() {
+            $("#mbit_loading").show();
+
+            if (window.name != 'hotspot_status') return true;
+
+            open('$(link-logout)', 'hotspot_logout', 'toolbar=0,location=0,directories=0,status=0,menubars=0,resizable=1,width=280,height=250');
+            window.close();
+
+            $("#mbit_loading").hide();
+            return false;
+        }
+
+        // Prevent closing
+        var preventClose = false;
+        window.onbeforeunload = function () {
+            if (preventClose) return "Vendo has inserted amount, are you sure to close?"
+        }
+        function SetPreventClose(_hook) { preventClose = _hook; }
+    </script>
+</head>
+
+<body role="document">
+    <!-- Mikrotik Hotspot Variables (hidden) -->
+    <input type="hidden" id="mk_error_val" name="error" value="$(error)">
+    <input type="hidden" id="mk-username-val" name="username" value="$(username)">
+    <input type="hidden" id="mk_home_ip" name="hostname" value="$(hostname)">
+    <input type="hidden" id="mk_refresh_secs" name="refresh-timeout-secs" value="$(refresh-timeout-secs)">
+    <!-- Mikrotik Hotspot Variables (hidden) -->
+
+    <!-- Loading -->
+    <div id="mbit_loading">
+        <div class="row vertical-center-row">
+            <table width="100%" height="100%">
+                <tr>
+                    <td align="center" valign="middle">
+                        <img src="images/Spinner-0.7s-197px.svg" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- Loading -->
+
+    $(if advert-pending == 'yes')
+    onLoad="openAdvert()"
+    $(endif)
+
+    <!-- Header -->
+    <header id="fh5co-header" role="banner" style="margin-top: 3em; margin-bottom: 0em;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="fh5co-page-title text-center">
+                        <h1 class="fh5co-title mbit-brand">
+                            <span id="mbit_brand"></span>
+                            <span id="mbit_brand_sub" class="mbit-brand-sub"></span>
+                        </h1>
+                        <h2 class="fh5co-title-sub">Piso WiFi Vendo</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Header -->
+
+    <div class="container theme-showcase" role="main">
+        <div class="row"><br></div>
+
+        <!-- <div class="row">
+            $(if login-by == 'trial')
+            <br>
+            <h2>Welcome trial user!</h2><br>
+            $(elif login-by != 'mac')
+            <br>
+            <h2>Welcome $(username)!</h2><br>
+            $(endif)
+        </div> -->
+
+        <!-- Success Alerts -->
+        <div id="mbit_success_alert" class="alert alert-success" hidden>
+        </div>
+        <!-- Success Alerts -->
+
+        <!-- Error Alerts -->
+        <div id="mbit_error_alert" class="alert alert-danger mb-fadeIn" hidden>
+        </div>
+        <!-- Error Alerts -->
+
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                <!-- Panel -->
+                <div class="panel panel-default">
+                    <!-- Panel Header -->
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Your connection status</h3>
+                    </div>
+
+                    <!-- Panel Body -->
+                    <div class="panel-body">
+                        <table class="table table-responsive table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td><i class="icon-user"></i> Username / Voucher:</td>
+                                    <td>$(username)</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="icon-cloud2"></i> IP Address:</td>
+                                    <td>$(ip)</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="icon-select-arrows"></i> Bytes Up / Down:</td>
+                                    <td>$(bytes-in-nice) / $(bytes-out-nice)</td>
+                                </tr>
+                                $(if session-time-left)
+                                <tr>
+                                    <td><i class="icon-clock2"></i> Connected / Left:</td>
+                                    <td>$(uptime) / $(session-time-left)</td>
+                                </tr>
+                                $(else)
+                                <tr>
+                                    <td><i class="icon-clock2"></i> Connected:</td>
+                                    <td>$(uptime)</td>
+                                </tr>
+                                $(endif)
+                                $(if blocked == 'yes')
+                                <tr>
+                                    <td>Status:</td>
+                                    <td>
+                                        <div style="color: #FF8080">
+                                            <a href="$(link-advert)" target="hotspot_advert">advertisement</a> required
+                                        </div>
+                                    </td>
+                                    $(elif refresh-timeout)
+                                <tr>
+                                    <td><i class="icon-time-slot"></i> Status Refresh:</td>
+                                    <td>$(refresh-timeout)</td>
+                                    $(endif)
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <form id="logout_form" action="$(link-logout)" name="logout" onSubmit="return openLogout()">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    $(if username != 'admin')
+                                    <input type="submit" value="Pause Time" class="btn btn-primary btn-block">
+                                    $(endif)
+                                    <button type="button" class="btn btn-outline btn-block"
+                                        onclick="location.reload();">Refresh</button>
+                                    <button id="logoutBtn" type="button"
+                                        class="btn btn-danger btn-block">Logout</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Panel Body -->
+
+                </div>
+                <!-- Panel -->
+
+            </div>
+
+            <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                $(if username == 'admin')
+                <button id="voucherGenBtn" type="button" class="btn-block btn btn-primary mbit-shiny-btn" data-toggle="modal">Voucher
+                    Generator</button>
+                $(else)
+                <button id="extendTimeBtn" type="button" class="btn-block btn btn-primary mbit-shiny-btn"
+                    data-toggle="modal">Add
+                    Time</button>
+                $(endif)
+                <br>
+                <h5 class="mbit-home-link">You may also visit PisoWiFi Vendo at <a class="btn-link" href="http://10.0.0.1"
+                        target="_blank">http://10.0.0.1</a> to be able to PAUSE & ADD Time.</h5>
+            </div>
+
+            <!-- Insert Coin Modal (Must be the same with the @Login Modal) -->
+            <div class="modal fade" id="insertCoinModal" tabindex="-1" role="dialog" data-backdrop="static"
+                data-keyboard="false" aria-labelledby="insertCoinModalLabel">
+                <div class="modal-dialog" role="document">
+                    <!-- Modal Content -->
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+                            <button id="insertCoinCloseBtn" type="button" class="close" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="insertCoinModalLabel">Vendo Voucher Generate</h4>
+                        </div>
+                        <!-- Modal Header -->
+
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                            <!-- Insert Coin -->
+                            <div class="insertCoinGenerate row">
+                                <div class="col-xs-12">
+                                    <h3>Insert Coin Now! <span class="mbit-home-link h5">You may also visit
+                                            PisoWiFi
+                                            Vendo at <a class="btn-link" href="http://10.0.0.1" target="_blank">http://10.0.0.1</a> to be
+                                            able to PAUSE & ADD Time.</span></h3>
+                                </div>
+
+                                <!-- Progress Bar -->
+                                <div class="col-xs-12">
+                                    <div class="progress" style="height: 100%;">
+                                        <div id="insertCoinProgressBar" class="progress-bar progress-bar-default"
+                                            role="progressbar" style="width: 100%;" aria-valuenow="100"
+                                            aria-valuemin="0" aria-valuemax="100">100%
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Progress Bar -->
+
+                                <!-- Vendo amount and uptime displays -->
+                                <div class="col-xs-12 jumbotron" style="text-align: center;">
+                                    <h1>₱<span class="insertCoinAmount">0</span> <span id="insertCoinAdded">+ 0</span></h1>
+                                    <p>Amount: <span class="insertCoinAmount">0</span> PHP</p>
+                                    <p>Time: <span id="insertCoinUptime">0m</span></p>
+                                    <p class="mbit_modal_unused">Balance: <span id="insertCoinUnused">0</span></p>
+                                    <div class="mbit_modal_unused col-xs-12">
+                                        <p>Insert more coins to credit your balance</p>
+                                    </div>
+                                </div>
+                                <!-- Vendo amount and uptime displays -->
+
+                                <div id="mbit_modal_tips" class="col-xs-12">
+                                    <p>
+                                        You will need to pause time and login back to update the session time left.
+                                        Do not worry your time will already be added and subscription validity will be
+                                        extended.
+                                    </p>
+                                </div>
+
+                                <!-- Buttons -->
+                                <div class="col-xs-12">
+                                    <button id="insertCoinCancelBtn" type="button"
+                                        class="btn-block btn btn-danger">Cancel
+                                    </button>
+                                    <button id="insertCoinPaidBtn" type="button"
+                                        class="btn-block btn btn-primary mbit-shiny-btn">Confirm
+                                    </button>
+                                </div>
+                                <!-- Buttons -->
+
+                                <div class="fh5co-spacer fh5co-spacer-xs"></div>
+
+                                <!-- Piso WiFi Rates -->
+                                <div class="col-xs-12">
+                                    <div class="panel-group fh5co-accordion" id="accordion" role="tablist"
+                                        aria-multiselectable="true">
+                                        <div class="panel panel-default ">
+
+                                            <div class="panel-heading collapsed" role="tab" id="headingRates"
+                                                data-toggle="collapse" data-parent="#accordion"
+                                                data-target="#collapseRates" aria-expanded="false"
+                                                aria-controls="collapseRates">
+                                                <h4 class="panel-title">
+                                                    <a class="accordion-toggle">
+                                                        Piso WiFi - Rates
+                                                    </a>
+                                                </h4>
+                                            </div>
+
+                                            <!-- Add class "in" @collapseRates for open defualt -->
+                                            <div id="collapseRates" class="panel-collapse collapse" role="tabpanel"
+                                                aria-labelledby="collapseRates">
+                                                <div class="panel-body">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Amount</th>
+                                                                <th scope="col">Time</th>
+                                                                <th scope="col">Validity</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="rates">
+                                                            <!-- <tr>
+                                                                <th scope="row">1</th>
+                                                                <td>1 PHP</td>
+                                                                <td>00 hour/s 12 minute/s</td>
+                                                                <td>1 day/s</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">2</th>
+                                                                <td>5 PHP</td>
+                                                                <td>01 hour/s 30 minute/s</td>
+                                                                <td>1 day/s</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">3</th>
+                                                                <td>10 PHP</td>
+                                                                <td>03 hour/s 30 minute/s</td>
+                                                                <td>1 day/s</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">4</th>
+                                                                <td>20 PHP</td>
+                                                                <td>08 hour/s 00 mintue/s</td>
+                                                                <td>1 day/s</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">5</th>
+                                                                <td>50 PHP</td>
+                                                                <td>24 hour/s 00 Minute/s</td>
+                                                                <td>7 day/s</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">6</th>
+                                                                <td>50 PHP</td>
+                                                                <td>48 hour/s 00 Minute/s</td>
+                                                                <td>7 day/s</td>
+                                                            </tr> -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Piso WiFi Rates -->
+                            </div>
+                            <!-- Insert Coin -->
+
+                            <!-- Select Vendo Display -->
+                            <div id="vendos" class="insertCoinSelectVendo row">
+                                <!-- <div class="col-xs-6 col-md-4">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        Main Vendo
+                                    </div>
+                                    <div class="panel-footer">Panel footer</div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6 col-md-4">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        Sub Vendo 1
+                                    </div>
+                                    <div class="panel-footer">Panel footer</div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6 col-md-4">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        Sub Vendo 2
+                                    </div>
+                                    <div class="panel-footer">Panel footer</div>
+                                </div>
+                            </div> -->
+                            </div>
+                            <h5 class="mbit-home-link insertCoinSelectVendo">You may also visit PisoWiFi Vendo
+                                at <a class="btn-link" href="http://10.0.0.1" target="_blank">http://10.0.0.1</a> to be able to PAUSE &
+                                EXTEND Timer.</h5>
+                            <!-- Select Vendo Display -->
+
+                            <!-- Voucher Generator -->
+                            <div class="voucherGenerator">
+                                <div class="panel-body">
+                                    <form id="vouchergen_form">
+                                        <label><span><i class="icon-price-tag"></i></span> Amount</label>
+                                        <input id="amount" type="number" name="amount" class="form-control"
+                                            placeholder="Amount" aria-describedby="amount-field" min="0" max="65535"
+                                            step="1" value="0">
+                                        <br>
+                                        <label><span><i class="icon-clock2"></i></span> Time(days/hours/minutes)</label>
+                                        <div class="row">
+                                            <div class="col-xs-4" style="padding-right: 2px;">
+                                                <input id="days" type="number" name="days" class="form-control"
+                                                    placeholder="Days" aria-describedby="days-field" min="0" max="65535"
+                                                    step="1" value="0">
+                                            </div>
+                                            <div class="col-xs-4" style="padding: 0px 2px;">
+                                                <input id="hours" type="number" name="hours" class="form-control"
+                                                    placeholder="Hours" aria-describedby="hours-field" min="0"
+                                                    max="65535" step="1" value="0">
+                                            </div>
+                                            <div class="col-xs-4" style="padding-left: 0px;">
+                                                <input id="minutes" type="number" name="minutes" class="form-control"
+                                                    placeholder="Minutes" aria-describedby="minutes-field" min="0"
+                                                    max="65535" step="1" value="0">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p>Input all zero for the up-time to set the voucher to unlimited time.</p>
+                                        </div>
+                                        <label><span><i class="icon-user"></i></span> Mikrotik Hotspot User
+                                            Profile</label>
+                                        <div class="input-group">
+                                            <div class="input-group-btn">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-outline dropdown-toggle" type="button"
+                                                        id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="true">
+                                                        User Profile
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <ul id="mbit_generator_profile" class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                                        <li><a href="#">VGEN1</a></li>
+                                                        <li><a href="#">VGEN2</a></li>
+                                                        <li><a href="#">VGEN3</a></li>
+                                                        <li><a href="#">VGEN4</a></li>
+                                                        <li><a href="#">VGEN5</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <input id="vgen_profile" type="vgen_profile" name="vgen_profile"
+                                                class="form-control" placeholder="User Profile"
+                                                aria-describedby="user-profile-field" value="VGEN1" disabled>
+                                        </div>
+                                    </form>
+                                    <br>
+                                    <input id="generatorBtn" type="button" class="btn-block btn btn-primary"
+                                        value="Generate">
+                                    <br>
+                                    <div class="panel-group fh5co-accordion" id="accordion" role="tablist"
+                                        aria-multiselectable="true">
+                                        <div class="panel panel-default ">
+                                            <div class="panel-heading collapsed" role="tab" id="headingGenerator"
+                                                data-toggle="collapse" data-parent="#accordion"
+                                                data-target="#collapseGenerator" aria-expanded="false"
+                                                aria-controls="collapseGenerator">
+                                                <h4 class="panel-title">
+                                                    <a class="accordion-toggle">
+                                                        Voucher Generated
+                                                    </a>
+                                                </h4>
+                                            </div>
+
+                                            <!-- Add class "in" @collapseGenerator for open defualt -->
+                                            <div id="collapseGenerator" class="panel-collapse collapse" role="tabpanel"
+                                                aria-labelledby="collapseGenerator">
+                                                <div class="panel-body">
+                                                    <p class="mbit-help-text">Voucher generated will not be saved in
+                                                        your browser. You may proceed to instruct the user.</p>
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Voucher</th>
+                                                                <th scope="col">Amount</th>
+                                                                <th scope="col">Time</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="generator">
+                                                            <!-- <tr>
+                                                                <th scope="row">MBIT_123</th>
+                                                                <td>300</td>
+                                                                <td>30d0h0m</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">MBIT_321</th>
+                                                                <td>900</td>
+                                                                <td>90d0h0m</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">MBIT_213</th>
+                                                                <td>600</td>
+                                                                <td>60d0h0m</td>
+                                                            </tr> -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Voucher Generator -->
+                        </div>
+
+                        <!-- Modal Footer -->
+                        <!-- <div class="modal-footer">
+                            <button id="insertCoinPaidBtn" type="button"
+                                class="insertCoinGenerate btn-block btn btn-primary">Confirm
+                            </button>
+                        </div> -->
+                        <!-- Modal Footer -->
+
+                    </div>
+                    <!-- Modal Content -->
+                </div>
+            </div>
+            <!-- Insert Coin Modal -->
+
+        </div>
+
+    </div>
+    <!-- Container -->
+
+    <!-- Footer -->
+    <footer id="fh5co-footer" class="fh5co-press" role="contentinfo" style="padding:1em;">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <p class="fh5co-copyright"><b>Copyright &copy; 2020-2022 MBit IT Solutions</b><br>
+                        Powered by <a href="https://mikrotik.com/" target="_blank">Mikrotik</a><br>
+                        Designed by <a href="https://freehtml5.co/" target="_blank">FREEHTML5.co</a> and Sounds by <a
+                            href="https://mixkit.co/" target="_blank">Mixkit</a><br>
+                        Hotspot Portal <span id="mbit_version"></span>
+                    </p>
+                </div>
+                <div class="col-sm-6">
+                    <ul class="fh5co-social">
+                        <li><a href="https://www.facebook.com/MBitITSolutions/" target="_blank"><i
+                                    class="icon-facebook"></i></a></li>
+                        <li><a href="https://api.whatsapp.com/send?phone=639761793786&app=facebook&entry_point=page_cta&fbclid=IwAR3pb93iMXu42oKjXaG5v4yAAJEBrtiHZJAa26gs2qfJzwkewoS6H9OfxGI"
+                                target="_blank"><i class="icon-phone"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer -->
+
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- jQuery -->
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="js/bootstrap.js"></script>
+    <!-- PLACE YOUR SCRIPTS HERE ~ MBIT TEAM -->
+    <script src="/js/mbit-config.js"></script>
+    <script src="/js/mbitv1.js"></script>
+</body>
+
+</html>
